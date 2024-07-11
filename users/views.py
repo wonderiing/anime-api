@@ -50,5 +50,5 @@ def register(request):
         #Crea el token en base al usuario
         token = Token.objects.create(user=user)
         #Retorna el token.key osea el string
-        return Response({'token': token.key, 'user': serializer.data}, status=status.HTTP_201_CREATED)
+        return Response({'user': serializer.data}, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
