@@ -10,26 +10,6 @@ from rest_framework import status
 
 
 from .serializers import UserSerializer
-# Create your views here.
-
-# This views are not working
-
-@api_view(['POST'])
-def login(request):
-    
-    #Busca un usuario identico al que me manden en la request o tira 404 si no existe
-    user = get_object_or_404(User, username=request.data['username'])
-
-
-    #Comprobamos la password con la password ya hasheada de la DB
-    if not user.check_password(request.data['password']):
-        return Response({"error": "Invalid password"},status=status.HTTP_400_BAD_REQUEST)
-    
-    #Creamos o obtenemos token del user
-    token,created = Token.objects.get_or_create(user=user)
-    
-    #Retornamos el token
-    return Response({"token": token.key},status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def register(request):
