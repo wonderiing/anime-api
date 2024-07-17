@@ -12,41 +12,7 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = '__all__'
 
-class AnimeSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = Anime
-        fields = '__all__'
 
-    def to_representation(self, instance):
-        return{
-            'id': instance.id,
-            'name': instance.name,
-            'rating': instance.rating,
-            'category': instance.category.name,
-            'chapters': instance.chapters,
-            'seasons': instance.seasons,
-            'image': instance.image.url,
-            'sinopsis': instance.sinopsis,
-        }
-
-class AnimeMovieSerializer(serializers.ModelSerializer):
-
-
-    class Meta:
-        model = AnimeMovie
-        fields = '__all__'
-
-    def to_representation(self, instance):
-        return{
-            'id': instance.id,
-            'name': instance.name,
-            'rating': instance.rating,
-            'category': instance.category.name,
-            'duration': instance.duration,
-            'image': instance.image.url,
-            'sinopsis': instance.sinopsis,
-        }
     
 class AnimeCharacterSerializer(serializers.ModelSerializer):
 
@@ -77,3 +43,41 @@ class AnimeCharacterSerializer(serializers.ModelSerializer):
             representation['anime-movie'] = None
 
         return representation
+
+class AnimeMovieSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = AnimeMovie
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        return{
+            'id': instance.id,
+            'name': instance.name,
+            'rating': instance.rating,
+            'category': instance.category.name,
+            'duration': instance.duration,
+            'image': instance.image.url,
+            'sinopsis': instance.sinopsis, 
+        }
+    
+
+class AnimeSerializer(serializers.ModelSerializer):
+
+    anime_characters = AnimeCharacterSerializer(many = True, read_only = True)
+
+
+    class Meta:
+        model = Anime
+        exclude = ('is_active', 'is_favorite')
+        
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['category'] = instance.category.name
+        representation['image'] = instance.image.url
+
+        return representation
+
+
+    
